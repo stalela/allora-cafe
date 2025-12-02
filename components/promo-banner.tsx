@@ -73,9 +73,12 @@ export default function PromoBanner() {
                 <Button
                   size="lg"
                   className="bg-gold hover:bg-gold/90 text-deep-brown font-bold text-lg px-8 py-6 transition-all duration-300 hover:scale-105 shadow-xl"
+                  asChild
                 >
-                  <Gift className="mr-2 h-5 w-5" />
-                  Order Platter Now
+                  <a href="https://wa.me/27677685025?text=Hi%2C%20I%20would%20like%20to%20order%20the%20Family%20Christmas%20Platter%20(R1%2C480)%20from%20Allora%20Cafe" target="_blank" rel="noopener noreferrer">
+                    <Gift className="mr-2 h-5 w-5" />
+                    Order Platter Now
+                  </a>
                 </Button>
               </div>
             </div>

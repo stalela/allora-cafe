@@ -217,9 +217,11 @@ function MenuCard({ item }: { item: MenuItem }) {
           <span className="text-terracotta font-bold text-lg whitespace-nowrap">R{item.price}</span>
         </div>
         <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2">{item.description}</p>
-        <Button className="w-full bg-forest-green hover:bg-forest-green/90 text-cream font-medium transition-all duration-300 hover:scale-[1.02] group/btn">
-          <Plus className="mr-2 h-4 w-4 transition-transform group-hover/btn:rotate-90" />
-          Add to Cart
+        <Button className="w-full bg-forest-green hover:bg-forest-green/90 text-cream font-medium transition-all duration-300 hover:scale-[1.02] group/btn" asChild>
+          <a href={`https://wa.me/27677685025?text=Hi%2C%20I%20would%20like%20to%20order%20${encodeURIComponent(item.name)}%20(R${item.price})%20from%20Allora%20Cafe`} target="_blank" rel="noopener noreferrer">
+            <Plus className="mr-2 h-4 w-4 transition-transform group-hover/btn:rotate-90" />
+            Add to Cart
+          </a>
         </Button>
       </CardContent>
     </Card>
@@ -286,9 +288,12 @@ export default function MenuSection() {
             variant="outline"
             size="lg"
             className="border-2 border-terracotta text-terracotta hover:bg-terracotta hover:text-cream font-semibold px-8 transition-all duration-300 bg-transparent"
+            asChild
           >
-            <ShoppingBag className="mr-2 h-5 w-5" />
-            View Full Menu
+            <a href="https://wa.me/27677685025?text=Hi%2C%20I%20would%20like%20to%20see%20the%20full%20menu%20and%20place%20an%20order%20from%20Allora%20Cafe" target="_blank" rel="noopener noreferrer">
+              <ShoppingBag className="mr-2 h-5 w-5" />
+              View Full Menu
+            </a>
           </Button>
         </div>
       </div>
