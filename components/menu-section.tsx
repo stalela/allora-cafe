@@ -19,6 +19,13 @@ interface MenuItem {
 const menuData: Record<string, MenuItem[]> = {
   festive: [
     {
+      id: "f7",
+      name: "Jollof Rice and Chicken",
+      description: "Herb-marinated whole chicken roasted to golden perfection with seasonal vegetables.",
+      price: 285,
+      image: "/27ccdacc-eddc-48ea-bc5c-b2800b127950.jpg",
+    },
+    {
       id: "f1",
       name: "Roast Lamb with Herbs",
       description: "Slow-roasted leg of lamb with rosemary, garlic, and seasonal vegetables. A festive centerpiece.",
@@ -65,6 +72,21 @@ const menuData: Record<string, MenuItem[]> = {
     },
   ],
   african: [
+    {
+      id: "a7",
+      name: "Macaroni & Cheese",
+      description: "Slow-cooked beef in a rich, aromatic gravy with root vegetables and herbs.",
+      price: 175,
+      image: "/72b30ccb-a055-42f7-8f18-7815eda02ccf.jpg",
+    },
+    {
+      id: "a8",
+      name: "Noodles with vegetables",
+      description: "Traditional South African dish of samp and sugar beans, slow-cooked to perfection.",
+      price: 85,
+      image: "/0428e26d-6c77-4916-9231-b890f76f7c9b.jpg",
+      badge: "Comfort Food",
+    },
     {
       id: "a1",
       name: "Mogodu (Tripe)",
@@ -113,6 +135,21 @@ const menuData: Record<string, MenuItem[]> = {
     },
   ],
   cafe: [
+    {
+      id: "c7",
+      name: "Honey wings",
+      description: "Fresh mixed greens with grilled chicken, cherry tomatoes, feta, and balsamic vinaigrette.",
+      price: 125,
+      image: "/998aaec8-b2b9-457e-85a2-f7bf4e2cc6c7.jpg",
+    },
+    {
+      id: "c8",
+      name: "Honey drumsticks",
+      description: "Selection of fresh grilled fish, prawns, and calamari with lemon butter sauce.",
+      price: 295,
+      image: "/035360fe-eec2-4294-8044-b48159b1253e.jpg",
+      badge: "Premium",
+    },
     {
       id: "c1",
       name: "Gourmet Wagyu Burger",
