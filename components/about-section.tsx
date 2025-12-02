@@ -14,7 +14,7 @@ export default function AboutSection() {
             </h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                Born in the vibrant streets of Johannesburg, Allora Cafe is more than a kitchen — it's a celebration of
+                Born in the vibrant streets of Marshalltown Joburg, Allora Cafe is more than a kitchen — it's a celebration of
                 African culinary heritage. Our chefs blend traditional recipes passed down through generations with
                 modern techniques to create dishes that tell stories.
               </p>
@@ -49,7 +49,7 @@ export default function AboutSection() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-deep-brown text-sm">Order by Phone</h4>
-                    <p className="text-muted-foreground text-sm">+27 11 123 4567</p>
+                    <p className="text-muted-foreground text-sm">+27677685025</p>
                     <p className="text-muted-foreground text-xs">WhatsApp available</p>
                   </div>
                 </CardContent>

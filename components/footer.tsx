@@ -58,11 +58,11 @@ export default function Footer() {
               <span className="font-serif text-3xl font-bold text-gold">Allora Cafe</span>
             </Link>
             <p className="text-cream/70 mb-6 leading-relaxed">
-              Authentic African cuisine and festive favorites, delivered with love from the heart of Johannesburg.
+              Authentic African cuisine and festive favorites, delivered with love from Marshalltown Joburg.
             </p>
             <div className="flex items-center gap-2 text-cream/70">
               <MapPin className="h-4 w-4 text-terracotta" />
-              <span className="text-sm">Based in the heart of Johannesburg, SA</span>
+              <span className="text-sm">Based in Marshalltown Joburg, SA</span>
             </div>
           </div>
 
@@ -124,7 +124,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-cream/50 text-sm text-center md:text-left">© 2025 Allora Cafe. All rights reserved.</p>
             <p className="text-cream/50 text-sm flex items-center gap-1">
-              Made with <Heart className="h-4 w-4 text-terracotta fill-terracotta" /> in Johannesburg
+              Made with <Heart className="h-4 w-4 text-terracotta fill-terracotta" /> in Marshalltown Joburg
             </p>
           </div>
         </div>

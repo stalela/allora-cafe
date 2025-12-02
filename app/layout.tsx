@@ -8,11 +8,12 @@ const inter = Inter({ subsets: ["latin"] })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
 
 export const metadata: Metadata = {
-  title: "Allora Cafe | Authentic African Cuisine & Festive Delivery in Johannesburg",
+  title: "Allora Cafe | Authentic African Cuisine & Festive Delivery in Marshalltown Joburg",
   description:
-    "Experience the taste of home this Christmas with Allora Cafe. Authentic African cuisine and holiday favorites delivered straight to your door in Johannesburg, South Africa.",
+    "Experience the taste of home this Christmas with Allora Cafe. Authentic African cuisine and holiday favorites delivered straight to your door in Marshalltown Joburg, South Africa.",
   keywords: [
     "African cuisine",
+    "Marshalltown restaurant",
     "Johannesburg restaurant",
     "food delivery",
     "Christmas dinner",
