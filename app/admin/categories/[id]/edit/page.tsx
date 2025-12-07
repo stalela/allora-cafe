@@ -5,8 +5,9 @@ import { CategoryForm } from '@/components/admin/category-form'
 export default async function EditCategoryPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase = await createServerSupabaseClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -18,7 +19,7 @@ export default async function EditCategoryPage({
   const { data: category, error } = await supabase
     .from('categories')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error || !category) {
@@ -38,4 +39,6 @@ export default async function EditCategoryPage({
     </div>
   )
 }
+
+
 
