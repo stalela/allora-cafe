@@ -88,7 +88,7 @@ export default function Navbar() {
 
           {/* Order Delivery CTA */}
           <Button className="hidden sm:flex bg-terracotta hover:bg-ochre text-cream font-semibold transition-all duration-300 hover:scale-105 shadow-lg" asChild>
-            <a href="https://wa.me/27677685025?text=Hi%2C%20I%20would%20like%20to%20place%20an%20order%20from%20Allora%20Cafe" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/27689592478?text=Hi%2C%20I%20would%20like%20to%20place%20an%20order%20from%20Allora%20Cafe" target="_blank" rel="noopener noreferrer">
               Order Delivery
             </a>
           </Button>
@@ -132,7 +132,7 @@ export default function Navbar() {
                 </nav>
                 <div className="mt-auto pt-8">
                   <Button className="w-full bg-terracotta hover:bg-ochre text-cream font-semibold py-6 text-lg" asChild>
-                    <a href="https://wa.me/27677685025?text=Hi%2C%20I%20would%20like%20to%20place%20an%20order%20from%20Allora%20Cafe" target="_blank" rel="noopener noreferrer">
+                    <a href="https://wa.me/27689592478?text=Hi%2C%20I%20would%20like%20to%20place%20an%20order%20from%20Allora%20Cafe" target="_blank" rel="noopener noreferrer">
                       Order Delivery
                     </a>
                   </Button>

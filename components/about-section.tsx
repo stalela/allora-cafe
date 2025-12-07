@@ -49,7 +49,7 @@ export default function AboutSection() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-deep-brown text-sm">Order by Phone</h4>
-                    <p className="text-muted-foreground text-sm">+27677685025</p>
+                    <p className="text-muted-foreground text-sm">+27689592478</p>
                     <p className="text-muted-foreground text-xs">WhatsApp available</p>
                   </div>
                 </CardContent>
