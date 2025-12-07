@@ -36,6 +36,11 @@ This directory contains the database schema for the Allora Cafe ecommerce backen
 - Stores product information
 - Fields: id, name, slug, description, price, compare_at_price, cost_price, sku, barcode, category_id (FK), image_url, image_urls (array), stock_quantity, track_inventory, is_active, is_featured, display_order, weight, dimensions (JSON), tags (array), metadata (JSON), timestamps
 
+### WhatsApp Messages Table
+- Stores inbound WhatsApp webhook payloads
+- Fields: id, wa_message_id, wa_from, wa_to, profile_name, message_type, message_text, raw (JSON), created_at
+- RLS: authenticated users can read; service role (webhook) writes
+
 ## API Endpoints
 
 ### Categories
@@ -59,4 +64,6 @@ The schema includes RLS policies that:
 - Require authentication for write operations (you may need to adjust these based on your auth setup)
 
 To customize RLS policies, modify the policies in `schema.sql` or through the Supabase dashboard.
+
+
 

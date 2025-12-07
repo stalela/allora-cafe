@@ -121,6 +121,41 @@ export interface Database {
           updated_at?: string
         }
       }
+      whatsapp_messages: {
+        Row: {
+          id: string
+          wa_message_id: string | null
+          wa_from: string | null
+          wa_to: string | null
+          profile_name: string | null
+          message_type: string | null
+          message_text: string | null
+          raw: Json | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          wa_message_id?: string | null
+          wa_from?: string | null
+          wa_to?: string | null
+          profile_name?: string | null
+          message_type?: string | null
+          message_text?: string | null
+          raw?: Json | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          wa_message_id?: string | null
+          wa_from?: string | null
+          wa_to?: string | null
+          profile_name?: string | null
+          message_type?: string | null
+          message_text?: string | null
+          raw?: Json | null
+          created_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -142,6 +177,9 @@ export type CategoryUpdate = Database['public']['Tables']['categories']['Update'
 export type Product = Database['public']['Tables']['products']['Row']
 export type ProductInsert = Database['public']['Tables']['products']['Insert']
 export type ProductUpdate = Database['public']['Tables']['products']['Update']
+export type WhatsAppMessage = Database['public']['Tables']['whatsapp_messages']['Row']
+export type WhatsAppMessageInsert = Database['public']['Tables']['whatsapp_messages']['Insert']
+export type WhatsAppMessageUpdate = Database['public']['Tables']['whatsapp_messages']['Update']
 
 // Extended types with relations
 export type ProductWithCategory = Product & {
@@ -151,4 +189,6 @@ export type ProductWithCategory = Product & {
 export type CategoryWithProducts = Category & {
   products?: Product[]
 }
+
+
 

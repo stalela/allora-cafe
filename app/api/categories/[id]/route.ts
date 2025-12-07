@@ -5,13 +5,15 @@ import type { CategoryUpdate } from '@/types/database'
 // GET /api/categories/[id] - Get a single category
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
+
     const { data, error } = await supabase
       .from('categories')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (error) {
@@ -41,15 +43,16 @@ export async function GET(
 // PATCH /api/categories/[id] - Update a category
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body: CategoryUpdate = await request.json()
 
     const { data, error } = await supabase
       .from('categories')
       .update(body)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
 
@@ -80,13 +83,15 @@ export async function PATCH(
 // DELETE /api/categories/[id] - Delete a category
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
+
     const { error } = await supabase
       .from('categories')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
 
     if (error) {
       console.error('Error deleting category:', error)
@@ -105,4 +110,6 @@ export async function DELETE(
     )
   }
 }
+
+
 

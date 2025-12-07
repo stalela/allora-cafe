@@ -54,35 +54,68 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- Make trigger creation idempotent when re-running schema
+DROP TRIGGER IF EXISTS update_categories_updated_at ON categories;
 CREATE TRIGGER update_categories_updated_at BEFORE UPDATE ON categories
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_products_updated_at ON products;
 CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 
+-- Ensure policies are recreated cleanly when rerunning the script
+DROP POLICY IF EXISTS "Categories are viewable by everyone" ON categories;
 CREATE POLICY "Categories are viewable by everyone" ON categories
   FOR SELECT USING (is_active = true);
 
+DROP POLICY IF EXISTS "Categories can be inserted by authenticated users" ON categories;
 CREATE POLICY "Categories can be inserted by authenticated users" ON categories
   FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Categories can be updated by authenticated users" ON categories;
 CREATE POLICY "Categories can be updated by authenticated users" ON categories
   FOR UPDATE USING (true);
 
+DROP POLICY IF EXISTS "Categories can be deleted by authenticated users" ON categories;
 CREATE POLICY "Categories can be deleted by authenticated users" ON categories
   FOR DELETE USING (true);
 
+DROP POLICY IF EXISTS "Products are viewable by everyone" ON products;
 CREATE POLICY "Products are viewable by everyone" ON products
   FOR SELECT USING (is_active = true);
 
+DROP POLICY IF EXISTS "Products can be inserted by authenticated users" ON products;
 CREATE POLICY "Products can be inserted by authenticated users" ON products
   FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Products can be updated by authenticated users" ON products;
 CREATE POLICY "Products can be updated by authenticated users" ON products
   FOR UPDATE USING (true);
 
+DROP POLICY IF EXISTS "Products can be deleted by authenticated users" ON products;
 CREATE POLICY "Products can be deleted by authenticated users" ON products
   FOR DELETE USING (true);
+
+-- WhatsApp inbound message log
+CREATE TABLE IF NOT EXISTS whatsapp_messages (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  wa_message_id TEXT,
+  wa_from TEXT,
+  wa_to TEXT,
+  profile_name TEXT,
+  message_type TEXT,
+  message_text TEXT,
+  raw JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_created_at ON whatsapp_messages(created_at DESC);
+
+ALTER TABLE whatsapp_messages ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "WhatsApp messages viewable by authenticated users" ON whatsapp_messages;
+CREATE POLICY "WhatsApp messages viewable by authenticated users" ON whatsapp_messages
+  FOR SELECT TO authenticated USING (true);

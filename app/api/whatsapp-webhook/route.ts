@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase'
 
 /**
  * WhatsApp Cloud API webhook
@@ -39,15 +40,76 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+    console.log('[WhatsApp] Incoming webhook body:', JSON.stringify(body, null, 2))
 
-    // TODO: add business logic for messages/statuses. For now, just log minimal info.
+    const entry = body?.entry?.[0]
+    if (!entry) {
+      console.warn('[WhatsApp] No entry found in webhook')
+    }
+    const change = entry?.changes?.[0]
+    if (!change) {
+      console.warn('[WhatsApp] No change found in entry')
+    }
+    const value = change?.value
+    if (!value) {
+      console.warn('[WhatsApp] No value found in change')
+    }
+    const message = value?.messages?.[0]
+    if (!message) {
+      console.warn('[WhatsApp] No message found in value')
+    }
+    const contact = value?.contacts?.[0]
+    if (!contact) {
+      console.warn('[WhatsApp] No contact found in value')
+    }
+
+    if (message) {
+      console.log('[WhatsApp] Processing message ID:', message.id)
+      const wa_to =
+        value?.metadata?.display_phone_number ??
+        value?.metadata?.phone_number_id ??
+        null
+      const profile_name = contact?.profile?.name ?? null
+      const message_type = message.type ?? null
+      const message_text = message.text?.body ?? null
+
+      console.log('[WhatsApp] Message Details:', {
+        id: message.id,
+        from: message.from,
+        to: wa_to,
+        profile_name,
+        message_type,
+        message_text,
+      })
+
+      const supabase = createServerClient()
+      const { error: insertError } = await supabase
+        .from('whatsapp_messages')
+        .insert({
+          wa_message_id: message.id ?? null,
+          wa_from: message.from ?? null,
+          wa_to,
+          profile_name,
+          message_type,
+          message_text,
+          raw: body,
+        })
+
+      if (insertError) {
+        console.error('[WhatsApp] Failed to store WhatsApp message', insertError)
+      } else {
+        console.log('[WhatsApp] WhatsApp message stored successfully')
+      }
+    }
+
+    // Log in non-prod for visibility
     if (process.env.NODE_ENV !== 'production') {
-      console.log('WhatsApp webhook received', JSON.stringify(body, null, 2))
+      console.log('[WhatsApp] WhatsApp webhook received (non-prod)')
     }
 
     return NextResponse.json({ received: true }, { status: 200 })
   } catch (error) {
-    console.error('Failed to handle WhatsApp webhook', error)
+    console.error('[WhatsApp] Failed to handle WhatsApp webhook', error)
     return NextResponse.json({ error: 'Bad Request' }, { status: 400 })
   }
 }
