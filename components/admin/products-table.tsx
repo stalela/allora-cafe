@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClientSupabase } from '@/lib/supabase-client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Edit, Trash2, Eye, EyeOff } from 'lucide-react'
@@ -19,17 +18,13 @@ export function ProductsTable() {
 
   const loadProducts = async () => {
     try {
-      const supabase = createClientSupabase()
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          *,
-          category:categories(*)
-        `)
-        .order('created_at', { ascending: false })
-
-      if (error) throw error
-      setProducts(data || [])
+      const res = await fetch('/api/products?includeInactive=true')
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || 'Failed to fetch products')
+      }
+      const body = await res.json()
+      setProducts(body.data || [])
     } catch (error) {
       toast.error('Failed to load products', {
         description: error instanceof Error ? error.message : 'Unknown error'
@@ -43,13 +38,11 @@ export function ProductsTable() {
     if (!confirm('Are you sure you want to delete this product?')) return
 
     try {
-      const supabase = createClientSupabase()
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', id)
-
-      if (error) throw error
+      const res = await fetch(`/api/products/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || 'Failed to delete product')
+      }
       toast.success('Product deleted successfully')
       loadProducts()
     } catch (error) {
@@ -61,13 +54,15 @@ export function ProductsTable() {
 
   const toggleActive = async (product: Product) => {
     try {
-      const supabase = createClientSupabase()
-      const { error } = await supabase
-        .from('products')
-        .update({ is_active: !product.is_active })
-        .eq('id', product.id)
-
-      if (error) throw error
+      const res = await fetch(`/api/products/${product.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: !product.is_active }),
+      })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || 'Failed to update product')
+      }
       toast.success(`Product ${!product.is_active ? 'activated' : 'deactivated'}`)
       loadProducts()
     } catch (error) {
@@ -201,4 +196,6 @@ export function ProductsTable() {
     </Card>
   )
 }
+
+
 
