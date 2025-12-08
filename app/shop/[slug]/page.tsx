@@ -1,29 +1,79 @@
+"use client"
+
 import { notFound } from 'next/navigation'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { use, useEffect, useState } from 'react'
+import { createClientSupabase } from '@/lib/supabase-client'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
+import { useCart } from '@/lib/cart-context'
 import Link from 'next/link'
+import type { Product, Category } from '@/types/database'
 
-export const revalidate = 0
-
-export default async function ProductDetailPage({
+export default function ProductDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>
 }) {
-  const { slug } = await params
-  const supabase = await createServerSupabaseClient()
+  const { slug } = use(params)
+  const [product, setProduct] = useState<(Product & { category: Category | null }) | null>(null)
+  const [loading, setLoading] = useState(true)
+  const { addItem } = useCart()
 
-  const { data: product, error } = await supabase
-    .from('products')
-    .select(`
-      *,
-      category:categories(*)
-    `)
-    .eq('slug', slug)
-    .single()
+  useEffect(() => {
+    loadProduct()
+  }, [slug])
 
-  if (error || !product || product.is_active === false) {
+  const loadProduct = async () => {
+    try {
+      const supabase = createClientSupabase()
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          category:categories(*)
+        `)
+        .eq('slug', slug)
+        .single()
+
+      if (error || !data || data.is_active === false) {
+        notFound()
+      }
+
+      setProduct(data)
+    } catch (error) {
+      console.error('Failed to load product:', error)
+      notFound()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAddToCart = () => {
+    if (!product) return
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image_url || '/placeholder.svg',
+      slug: product.slug,
+    })
+  }
+
+  if (loading) {
+    return (
+      <section className="py-16 bg-cream">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p className="text-muted-foreground">Loading product...</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (!product) {
     notFound()
   }
 
@@ -76,16 +126,13 @@ export default async function ProductDetailPage({
             </div>
 
             <div className="flex gap-3">
-              <Link
-                href={`https://wa.me/27689592478?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(
-                  product.name
-                )}%20(R${product.price})%20from%20Allora%20Cafe`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-md bg-forest-green px-6 py-3 text-cream font-semibold shadow-sm hover:bg-forest-green/90 transition-colors"
+              <Button
+                onClick={handleAddToCart}
+                className="bg-forest-green hover:bg-forest-green/90 text-cream font-semibold shadow-sm transition-colors"
               >
-                Order on WhatsApp
-              </Link>
+                <Plus className="mr-2 h-4 w-4" />
+                Add to Cart
+              </Button>
               <Link
                 href="/shop"
                 className="inline-flex items-center justify-center rounded-md border border-terracotta px-6 py-3 text-terracotta font-semibold hover:bg-terracotta hover:text-cream transition-colors"

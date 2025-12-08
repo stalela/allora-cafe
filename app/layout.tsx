@@ -2,6 +2,8 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter, Playfair_Display } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { ThemeProvider } from "@/components/theme-provider"
+import { CartProvider } from "@/lib/cart-context"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -41,9 +43,23 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable}`}>
+    <html
+      lang="en"
+      className={`${playfair.variable} light`}
+      style={{ colorScheme: "light" }}
+      suppressHydrationWarning
+    >
       <body className={`${inter.className} antialiased`}>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

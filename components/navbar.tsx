@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
+import { useCart } from "@/lib/cart-context"
+import CartPanel from "@/components/cart-panel"
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -17,7 +19,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [cartCount] = useState(3) // Demo cart count
+  const { totalItems, items } = useCart()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,24 +69,26 @@ export default function Navbar() {
         {/* Right Actions */}
         <div className="flex items-center gap-3">
           {/* Cart Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className={cn(
-              "relative transition-colors",
-              isScrolled
-                ? "text-deep-brown hover:text-terracotta hover:bg-sand"
-                : "text-cream hover:text-gold hover:bg-cream/10",
-            )}
-          >
-            <ShoppingCart className="h-5 w-5" />
-            {cartCount > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-terracotta text-cream text-xs border-0">
-                {cartCount}
-              </Badge>
-            )}
-            <span className="sr-only">Shopping cart</span>
-          </Button>
+          <CartPanel>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "relative transition-colors",
+                isScrolled
+                  ? "text-deep-brown hover:text-terracotta hover:bg-sand"
+                  : "text-cream hover:text-gold hover:bg-cream/10",
+              )}
+            >
+              <ShoppingCart className="h-5 w-5 text-terracotta" />
+              {totalItems > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-terracotta text-cream text-xs border-0">
+                  {totalItems}
+                </Badge>
+              )}
+              <span className="sr-only">Shopping cart</span>
+            </Button>
+          </CartPanel>
 
           {/* Order Delivery CTA */}
           <Button className="hidden sm:flex bg-terracotta hover:bg-ochre text-cream font-semibold transition-all duration-300 hover:scale-105 shadow-lg" asChild>
