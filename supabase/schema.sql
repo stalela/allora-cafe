@@ -18,15 +18,9 @@ CREATE TABLE IF NOT EXISTS products (
   slug VARCHAR(255) UNIQUE NOT NULL,
   description TEXT,
   price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
-  compare_at_price DECIMAL(10, 2) CHECK (compare_at_price >= 0),
-  cost_price DECIMAL(10, 2) CHECK (cost_price >= 0),
-  sku VARCHAR(100) UNIQUE,
-  barcode VARCHAR(100),
   category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
   image_url TEXT,
   image_urls TEXT[],
-  stock_quantity INTEGER DEFAULT 0 CHECK (stock_quantity >= 0),
-  track_inventory BOOLEAN DEFAULT true,
   is_active BOOLEAN DEFAULT true,
   is_featured BOOLEAN DEFAULT false,
   display_order INTEGER DEFAULT 0,
@@ -65,6 +59,14 @@ CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products
 
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+
+-- Backward-compatible cleanup of deprecated product fields
+ALTER TABLE products DROP COLUMN IF EXISTS compare_at_price;
+ALTER TABLE products DROP COLUMN IF EXISTS cost_price;
+ALTER TABLE products DROP COLUMN IF EXISTS sku;
+ALTER TABLE products DROP COLUMN IF EXISTS barcode;
+ALTER TABLE products DROP COLUMN IF EXISTS stock_quantity;
+ALTER TABLE products DROP COLUMN IF EXISTS track_inventory;
 
 -- Ensure policies are recreated cleanly when rerunning the script
 DROP POLICY IF EXISTS "Categories are viewable by everyone" ON categories;

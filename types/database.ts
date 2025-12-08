@@ -51,15 +51,9 @@ export interface Database {
           slug: string
           description: string | null
           price: number
-          compare_at_price: number | null
-          cost_price: number | null
-          sku: string | null
-          barcode: string | null
           category_id: string | null
           image_url: string | null
           image_urls: string[] | null
-          stock_quantity: number
-          track_inventory: boolean
           is_active: boolean
           is_featured: boolean
           display_order: number
@@ -76,15 +70,9 @@ export interface Database {
           slug: string
           description?: string | null
           price: number
-          compare_at_price?: number | null
-          cost_price?: number | null
-          sku?: string | null
-          barcode?: string | null
           category_id?: string | null
           image_url?: string | null
           image_urls?: string[] | null
-          stock_quantity?: number
-          track_inventory?: boolean
           is_active?: boolean
           is_featured?: boolean
           display_order?: number
@@ -101,15 +89,9 @@ export interface Database {
           slug?: string
           description?: string | null
           price?: number
-          compare_at_price?: number | null
-          cost_price?: number | null
-          sku?: string | null
-          barcode?: string | null
           category_id?: string | null
           image_url?: string | null
           image_urls?: string[] | null
-          stock_quantity?: number
-          track_inventory?: boolean
           is_active?: boolean
           is_featured?: boolean
           display_order?: number

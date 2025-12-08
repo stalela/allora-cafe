@@ -56,14 +56,13 @@ export default async function ShopPage() {
                   {product.description && (
                     <p className="text-muted-foreground text-sm line-clamp-2">{product.description}</p>
                   )}
-                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    {product.is_featured && (
+                  {product.is_featured && (
+                    <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                       <Badge variant="secondary" className="bg-terracotta/10 text-terracotta border-0">
                         Featured
                       </Badge>
-                    )}
-                    {product.track_inventory === false && <span>Made to order</span>}
-                  </div>
+                    </div>
+                  )}
                 </CardContent>
               </Link>
             </Card>

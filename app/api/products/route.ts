@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { generateSlug, generateUniqueSlug } from '@/lib/utils/slug'
 import type { ProductInsert, ProductUpdate } from '@/types/database'
 
-// GET /api/products - Get all products
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -61,20 +61,17 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/products - Create a new product
 export async function POST(request: NextRequest) {
   try {
     const body: ProductInsert = await request.json()
 
-    // Validate required fields
-    if (!body.name || !body.slug || body.price === undefined) {
+    if (!body.name || body.price === undefined) {
       return NextResponse.json(
-        { error: 'Name, slug, and price are required' },
+        { error: 'Name and price are required' },
         { status: 400 }
       )
     }
 
-    // Validate price
     if (body.price < 0) {
       return NextResponse.json(
         { error: 'Price must be greater than or equal to 0' },
@@ -82,14 +79,65 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { data, error } = await supabase
+    const baseSlug = generateSlug(body.name)
+    if (!baseSlug) {
+      return NextResponse.json(
+        { error: 'Unable to generate slug from name' },
+        { status: 400 }
+      )
+    }
+
+    const randomSuffix = Math.floor(100 + Math.random() * 900).toString()
+    const slugWithRandom = `${baseSlug}-${randomSuffix}`
+
+    const { data: existing, error: existingError } = await supabase
       .from('products')
-      .insert(body)
-      .select(`
-        *,
-        category:categories(*)
-      `)
-      .single()
+      .select('slug')
+      .ilike('slug', `${slugWithRandom}%`)
+
+    if (existingError) {
+      console.error('Error checking existing slugs:', existingError)
+      return NextResponse.json(
+        { error: 'Failed to create product', details: existingError.message },
+        { status: 500 }
+      )
+    }
+
+    const uniqueSlug = generateUniqueSlug(
+      slugWithRandom,
+      (existing || []).map((p) => p.slug)
+    )
+
+    const attemptInsert = async (slugToUse: string) => {
+      const { slug: _ignoreSlug, ...bodyWithoutSlug } = body
+      return supabase
+        .from('products')
+        .insert({ ...bodyWithoutSlug, slug: slugToUse })
+        .select(
+          `
+          *,
+          category:categories(*)
+        `
+        )
+        .single()
+    }
+
+    let { data, error } = await attemptInsert(uniqueSlug)
+
+    if (error && error.code === '23505') {
+      const { data: existingAgain } = await supabase
+        .from('products')
+        .select('slug')
+        .ilike('slug', `${slugWithRandom}%`)
+
+      const retrySlug = generateUniqueSlug(
+        slugWithRandom,
+        (existingAgain || []).map((p) => p.slug)
+      )
+      const retry = await attemptInsert(retrySlug)
+      data = retry.data
+      error = retry.error
+    }
 
     if (error) {
       console.error('Error creating product:', error)
@@ -108,6 +156,4 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-
-
 

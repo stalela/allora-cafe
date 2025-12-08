@@ -10,22 +10,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { generateSlug } from '@/lib/utils/slug'
 import type { Product, Category } from '@/types/database'
 
 const productSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  slug: z.string().min(1, 'Slug is required'),
   description: z.string().optional(),
   price: z.number().min(0, 'Price must be greater than or equal to 0'),
-  compare_at_price: z.number().min(0).optional().nullable(),
-  cost_price: z.number().min(0).optional().nullable(),
-  sku: z.string().optional().nullable(),
-  barcode: z.string().optional().nullable(),
   category_id: z.string().uuid().optional().nullable(),
   image_url: z.string().url().optional().nullable(),
-  stock_quantity: z.number().min(0).default(0),
-  track_inventory: z.boolean().default(true),
   is_active: z.boolean().default(true),
   is_featured: z.boolean().default(false),
   display_order: z.number().default(0),
@@ -59,17 +51,10 @@ export function ProductForm({ product }: ProductFormProps) {
     defaultValues: product
       ? {
           name: product.name,
-          slug: product.slug,
           description: product.description || '',
           price: product.price,
-          compare_at_price: product.compare_at_price,
-          cost_price: product.cost_price,
-          sku: product.sku || '',
-          barcode: product.barcode || '',
           category_id: product.category_id || '',
           image_url: product.image_url || '',
-          stock_quantity: product.stock_quantity,
-          track_inventory: product.track_inventory,
           is_active: product.is_active,
           is_featured: product.is_featured,
           display_order: product.display_order,
@@ -77,23 +62,11 @@ export function ProductForm({ product }: ProductFormProps) {
           tags: product.tags || [],
         }
       : {
-          stock_quantity: 0,
-          track_inventory: true,
           is_active: true,
           is_featured: false,
           display_order: 0,
         },
   })
-
-  const nameValue = watch('name')
-
-  useEffect(() => {
-    // Auto-generate slug from name
-    if (nameValue && !product) {
-      const slug = generateSlug(nameValue)
-      setValue('slug', slug)
-    }
-  }, [nameValue, product, setValue])
 
   useEffect(() => {
     loadCategories()
@@ -155,19 +128,17 @@ export function ProductForm({ product }: ProductFormProps) {
     setLoading(true)
     try {
       const supabase = createClientSupabase()
-      
+
       const productData = {
         ...data,
-        compare_at_price: data.compare_at_price || null,
-        cost_price: data.cost_price || null,
         category_id: data.category_id || null,
         image_url: data.image_url || null,
-        weight: data.weight || null,
-        tags: data.tags || null,
+        weight: data.weight ?? null,
+        tags: data.tags ?? null,
       }
 
       if (product) {
-        // Update existing product
+        // Update existing product directly (slug stays unchanged on backend)
         const { error } = await supabase
           .from('products')
           .update(productData)
@@ -176,12 +147,20 @@ export function ProductForm({ product }: ProductFormProps) {
         if (error) throw error
         toast.success('Product updated successfully')
       } else {
-        // Create new product
-        const { error } = await supabase
-          .from('products')
-          .insert(productData)
+        // Create new product via API so slug is generated on backend
+        const response = await fetch('/api/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(productData),
+        })
 
-        if (error) throw error
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}))
+          throw new Error(body.error || 'Failed to create product')
+        }
+
         toast.success('Product created successfully')
       }
 
@@ -213,18 +192,6 @@ export function ProductForm({ product }: ProductFormProps) {
               />
               {errors.name && (
                 <p className="text-sm text-destructive mt-1">{errors.name.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Slug *</label>
-              <Input
-                {...register('slug')}
-                className="mt-1"
-                placeholder="product-slug"
-              />
-              {errors.slug && (
-                <p className="text-sm text-destructive mt-1">{errors.slug.message}</p>
               )}
             </div>
 
@@ -274,64 +241,13 @@ export function ProductForm({ product }: ProductFormProps) {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Compare at Price (R)</label>
+              <label className="text-sm font-medium">Display Order (optional)</label>
               <Input
                 type="number"
-                step="0.01"
-                {...register('compare_at_price', { valueAsNumber: true })}
-                className="mt-1"
-                placeholder="0.00"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Cost Price (R)</label>
-              <Input
-                type="number"
-                step="0.01"
-                {...register('cost_price', { valueAsNumber: true })}
-                className="mt-1"
-                placeholder="0.00"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">SKU</label>
-              <Input
-                {...register('sku')}
-                className="mt-1"
-                placeholder="SKU-123"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Barcode</label>
-              <Input
-                {...register('barcode')}
-                className="mt-1"
-                placeholder="1234567890"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Stock Quantity</label>
-              <Input
-                type="number"
-                {...register('stock_quantity', { valueAsNumber: true })}
+                {...register('display_order', { valueAsNumber: true })}
                 className="mt-1"
                 placeholder="0"
               />
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  {...register('track_inventory')}
-                  className="rounded"
-                />
-                <span className="text-sm">Track Inventory</span>
-              </label>
             </div>
           </CardContent>
         </Card>

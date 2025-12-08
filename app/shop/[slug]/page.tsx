@@ -55,11 +55,6 @@ export default async function ProductDetailPage({
               </div>
               <h1 className="font-serif text-4xl font-bold text-deep-brown">{product.name}</h1>
               <p className="text-terracotta text-2xl font-semibold">R{product.price.toFixed(2)}</p>
-              {product.compare_at_price && (
-                <p className="text-muted-foreground line-through">
-                  R{product.compare_at_price.toFixed(2)}
-                </p>
-              )}
             </div>
 
             {product.description && (
@@ -77,12 +72,6 @@ export default async function ProductDetailPage({
               <div className="flex gap-3 items-center text-sm text-muted-foreground">
                 <span className="inline-flex h-2 w-2 rounded-full bg-forest-green" />
                 <span>{product.is_active ? 'Available' : 'Unavailable'}</span>
-              </div>
-              <div className="flex gap-3 text-sm text-muted-foreground">
-                <span className="font-medium text-deep-brown">Inventory:</span>
-                <span>
-                  {product.track_inventory ? product.stock_quantity : 'Made to order / not tracked'}
-                </span>
               </div>
             </div>
 

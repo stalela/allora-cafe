@@ -34,7 +34,7 @@ This directory contains the database schema for the Allora Cafe ecommerce backen
 
 ### Products Table
 - Stores product information
-- Fields: id, name, slug, description, price, compare_at_price, cost_price, sku, barcode, category_id (FK), image_url, image_urls (array), stock_quantity, track_inventory, is_active, is_featured, display_order, weight, dimensions (JSON), tags (array), metadata (JSON), timestamps
+- Fields: id, name, slug, description, price, category_id (FK), image_url, image_urls (array), is_active, is_featured, display_order, weight, dimensions (JSON), tags (array), metadata (JSON), timestamps
 
 ### WhatsApp Messages Table
 - Stores inbound WhatsApp webhook payloads

@@ -100,7 +100,6 @@ export function ProductsTable() {
                 <th className="px-6 py-3 text-left text-sm font-medium">Name</th>
                 <th className="px-6 py-3 text-left text-sm font-medium">Category</th>
                 <th className="px-6 py-3 text-left text-sm font-medium">Price</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Stock</th>
                 <th className="px-6 py-3 text-left text-sm font-medium">Status</th>
                 <th className="px-6 py-3 text-right text-sm font-medium">Actions</th>
               </tr>
@@ -123,9 +122,6 @@ export function ProductsTable() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="font-medium">{product.name}</div>
-                    {product.sku && (
-                      <div className="text-sm text-muted-foreground">SKU: {product.sku}</div>
-                    )}
                   </td>
                   <td className="px-6 py-4">
                     {product.category ? (
@@ -136,16 +132,6 @@ export function ProductsTable() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="font-medium">R{product.price.toFixed(2)}</div>
-                    {product.compare_at_price && (
-                      <div className="text-sm text-muted-foreground line-through">
-                        R{product.compare_at_price.toFixed(2)}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm">
-                      {product.track_inventory ? product.stock_quantity : 'N/A'}
-                    </span>
                   </td>
                   <td className="px-6 py-4">
                     <span
