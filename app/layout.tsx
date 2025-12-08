@@ -4,32 +4,13 @@ import { Inter, Playfair_Display } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CartProvider } from "@/lib/cart-context"
+import { defaultMetadata } from "@/lib/seo"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
 
-export const metadata: Metadata = {
-  title: "Allora Cafe | Authentic African Cuisine & Festive Delivery in Marshalltown Joburg",
-  description:
-    "Experience the taste of home this Christmas with Allora Cafe. Authentic African cuisine and holiday favorites delivered straight to your door in Marshalltown Joburg, South Africa.",
-  keywords: [
-    "African cuisine",
-    "Marshalltown restaurant",
-    "Johannesburg restaurant",
-    "food delivery",
-    "Christmas dinner",
-    "festive meals",
-    "South African food",
-  ],
-  openGraph: {
-    title: "Allora Cafe | The Taste of Home this Christmas in Joburg",
-    description: "Authentic African cuisine and holiday favorites delivered straight to your door.",
-    type: "website",
-    locale: "en_ZA",
-  },
-    generator: 'v0.app'
-}
+export const metadata: Metadata = defaultMetadata
 
 export const viewport: Viewport = {
   themeColor: "#c45a3a",
