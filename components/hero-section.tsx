@@ -38,17 +38,12 @@ export default function HeroSection() {
 
           <div className="flex flex-col sm:flex-row gap-4">
             <Button asChild size="lg" className="bg-terracotta hover:bg-ochre text-cream font-semibold text-lg px-8 py-6 transition-all duration-300 hover:scale-105 shadow-xl group">
-              <a href="https://wa.me/27689592478?text=Hi%2C%20I%20would%20like%20to%20place%20an%20order%20from%20Allora%20Cafe" target="_blank" rel="noopener noreferrer">
+              <a href="/shop">
                 View Festive Menu
                 <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </a>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-2 border-cream/80 bg-transparent text-cream hover:bg-cream hover:text-deep-brown font-semibold text-lg px-8 py-6 transition-all duration-300">
-              <a href="https://wa.me/27689592478?text=Hi%2C%20I%20would%20like%20to%20place%20an%20order%20from%20Allora%20Cafe" target="_blank" rel="noopener noreferrer">
-                <Truck className="mr-2 h-5 w-5" />
-                Order Now
-              </a>
-            </Button>
+           
           </div>
 
         </div>

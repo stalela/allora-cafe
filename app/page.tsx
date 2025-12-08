@@ -13,7 +13,6 @@ export default function Home() {
       <HeroSection />
     
       <MenuSection />
-      <PromoBanner />
       <Footer />
     </main>
   )
