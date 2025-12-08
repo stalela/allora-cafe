@@ -197,3 +197,24 @@ CREATE POLICY "Order items can be inserted by everyone" ON order_items
 DROP POLICY IF EXISTS "Order items can be updated by authenticated users" ON order_items;
 CREATE POLICY "Order items can be updated by authenticated users" ON order_items
   FOR UPDATE USING (true);
+
+-- Admin command logs
+CREATE TABLE IF NOT EXISTS admin_command_logs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  admin_phone VARCHAR(50) NOT NULL,
+  command VARCHAR(100) NOT NULL,
+  args JSONB,
+  success BOOLEAN NOT NULL,
+  response TEXT,
+  error_message TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_admin_command_logs_admin_phone ON admin_command_logs(admin_phone);
+CREATE INDEX IF NOT EXISTS idx_admin_command_logs_created_at ON admin_command_logs(created_at DESC);
+
+ALTER TABLE admin_command_logs ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Admin command logs viewable by authenticated users" ON admin_command_logs;
+CREATE POLICY "Admin command logs viewable by authenticated users" ON admin_command_logs
+  FOR SELECT TO authenticated USING (true);

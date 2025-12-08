@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { signOut } from '@/lib/auth'
 import { Button } from '@/components/ui/button'
-import { LogOut, Package, LayoutDashboard, FolderTree, MessageSquare, ShoppingCart } from 'lucide-react'
+import { LogOut, Package, LayoutDashboard, FolderTree, MessageSquare, ShoppingCart, Terminal } from 'lucide-react'
 import { toast } from 'sonner'
 
 export function AdminNav() {
@@ -57,6 +57,13 @@ export function AdminNav() {
             >
               <MessageSquare className="h-4 w-4" />
               Messages
+            </Link>
+            <Link
+              href="/admin/commands"
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Terminal className="h-4 w-4" />
+              Commands
             </Link>
           </div>
           <Button variant="outline" onClick={handleSignOut}>
