@@ -29,3 +29,5 @@ fi
 
 echo \"Starting Next.js dev server...\"
 yarn run dev
+
+

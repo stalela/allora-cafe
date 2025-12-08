@@ -5,16 +5,17 @@ import type { ProductUpdate } from '@/types/database'
 // GET /api/products/[id] - Get a single product
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { data, error } = await supabase
       .from('products')
       .select(`
         *,
         category:categories(*)
       `)
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (error) {
@@ -44,9 +45,10 @@ export async function GET(
 // PATCH /api/products/[id] - Update a product
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body: ProductUpdate = await request.json()
 
     // Validate price if provided
@@ -60,7 +62,7 @@ export async function PATCH(
     const { data, error } = await supabase
       .from('products')
       .update(body)
-      .eq('id', params.id)
+      .eq('id', id)
       .select(`
         *,
         category:categories(*)
@@ -94,13 +96,14 @@ export async function PATCH(
 // DELETE /api/products/[id] - Delete a product
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { error } = await supabase
       .from('products')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
 
     if (error) {
       console.error('Error deleting product:', error)
@@ -119,6 +122,8 @@ export async function DELETE(
     )
   }
 }
+
+
 
 
 
